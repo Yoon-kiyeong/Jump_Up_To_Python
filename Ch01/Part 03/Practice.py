@@ -81,3 +81,5 @@ body = body.replace('java','python') #body 문자열에서 "java"를 "python"으
 f = open('test.txt','w')        #파일을 쓰기 모드로 다시 실행
 f.write(body)
 f.close()
+
+#달을 향해 나아가라. 달에 미치지 못해도 별들 사이에 있게 될 것이다. -진 시먼스
