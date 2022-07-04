@@ -226,6 +226,270 @@ print(a.first)
 b.setdata(3,7)
 print(b.first)
 
-#클래스로 만든 객체의 객체변수는 다른 객체의 객체변수에 상관없이 독립적ㅇ니 값을 유지한다.
+#클래스로 만든 객체의 객체변수는 다른 객체의 객체변수에 상관없이 독립적인 값을 유지한다.
 
 #id 함수를 사용하면 객체변수가 독립적인 값을 유지한다는 점을 좀 더 명확하게 증명해 보일 수 있다.
+#id 함수는 객체의 주소를 돌려주는 파이썬 내장 함수이다.
+
+# 2022-07-04
+#다음과 같이 따라해 보자
+a = FourCal()
+b = FourCal()
+a.setdata(4,2)
+b.setdata(3,7)
+print(id(a.first))  #a의 first 주소 값을 확인
+print(id(b.first))  #b의 first 주소 값을 확인
+
+#a 객체의 first 주소 값과 b 객체의 first 주소 값이 서로 다르므로 각각 다른 곳에 그 값이 저장된다는 것을 알 수 있다.
+#객체변수는 그 객체의 고유 값을 저장할 수 있는 공간이다. 객체 변수는 다른 객체들 영향받지 않고 독립적으로 그 값을 유지한다는 점을 기억하자.
+#클래스에서는 이 부분을 이해하는 것이 제일 중요하다.
+#다음은 현재까지 완성된 FourCal 클래스이다.
+class FourCal:
+    def setdata(self,first,second):
+        self.first = first
+        self.second = second
+        
+#지금까지 살펴본 내용이 바로 위 4줄을 설명하기 위한 것이었다.
+
+#더하기 기능 만들기
+#2개의 숫자 값을 설정해 주었으니 2개의 숫자를 더하는 기능을 방금 만든 클래스에 추가해 보자.
+#우리는 다음과 같이 더하기 기능을 갖춘 클래스를 만들어야 한다.
+# a = FourCal()
+# a.setdata(4,2)
+# print(a.add())
+
+#이 연산이 가능하도록 다음과 같이 FourCal 클래스를 만들어 보자.
+class FourCal:
+    def setdata(self, first, second):
+        self.first = first
+        self.second = second
+    def add(self):
+        result = self.first  + self.second
+        return result
+
+#새롭게 추가된 것은 add 메소드이다. 이제 클래스를 사용해 보자.
+a = FourCal()
+a.setdata(4,2)
+#위와 같이 호출하면 앞에서 보았듯이 a 객체의 first,second 객체변수에는 각각 값 4와 2가 저장될 것이다.
+
+#이제 add 메소드를 호출해 보자.
+print(a.add())
+
+#a.add()라고 호출하면 add 메소드가 호출되어 값 6이 출력될 것이다. 어떤 과정을 거쳐 값 6이 출력되는지 add 메소드를 따로 떼어 내서 자세히 살펴 보자
+def add(self):
+    result = self.first + self.second
+    return result
+#add 메소드의 매개변수는 self이고 반환 값은 result이다. 반환 값인 result를 계산하는 부분은 다음과 같다
+# result = self.first + self.second
+#a.add()와 같이 a 객체에 의해 add 메소드가 수행되면 add 메소드의 self에는 객체 a가 자동으로 입력되므로 위 내용은 다음과 같이 해석한다.
+# result = a.first + a.second
+#위 내용은 a.add() 메소드 호출 전에 a.setdata(4,2)가 먼저 호출되어 a.first = 4, a.second = 2 라고 이미 설정되었기 때문에 다시 다음과 같이 해석된다.
+result = 4 + 2
+#따라서 다음과 같이 a.add()를 호출하면 6을 돌려준다.
+print(a.add())
+print()
+#곱하기,빼기,나누기 기능 만들기
+#이번에는 곱하기,빼기,나누기 등을 할 수 있게 프로그램을 만들어 보자.
+class FourCal:
+    def setdata(self,first,second):
+        self.first = first
+        self.second = second
+    def add(self):
+        result = self.first +  self.second
+        return result
+    def mul(self):
+        result = self.first * self.second
+        return result
+    def sub(self):
+        result =  self.first - self.second
+        return result
+    def div(self):
+        result = self.first / self.second
+        return result
+    
+#mul,sub,div 모두 add 메소드에서 배운 것과 동일한 방법이다.
+#정말로 모든 것이 제대로 동작하는지 확인해 보자.
+a = FourCal()
+b = FourCal()
+a.setdata(4,2)
+b.setdata(3,8)
+print(a.add())
+print(a.mul())
+print(a.sub())
+print(a.div())
+print(b.add())
+print(b.mul())
+print(b.sub())
+print(b.div())
+#여기까지가 우리가 목표한 사칙연산 기능을 가진 클래스를 만들어 보았다.
+print()
+
+#생성자(Constructor)
+#이번에는 우리가 만든 FourCal 클래스를 다음과 같이 사용해 보자.
+# a = FourCal()
+# a.add()
+#FourCal 클래스의 인스턴스 a 에 setdata 메소드를 수행하지 않고 add 메소드를 수행하면 'AttributeError: 'FourCal' object has no attribute 'first' 오류가 발생한다.
+#setdata 메소드를 수행해야 객체 a의 객체변수 first와 second가 생성되기 떄문이다.
+
+#이렇게 객체에 초깃값을 설정해야 할 필요가 있을 때는 setdata와 같은 메소드를 호출하여 초깃값을 설정하기보다는 생성자를 구현하는 것이 안전한 방법이다.
+#생성자(Construrtor)란 객체가 생성될 때 자동으로 호출되는 메소드를 의미한다.
+#파이썬 메소드 이름으로 __init__를 사용하면 이 메소드는 생성자가 된다.
+#다음과 같이 FourCal 클래스에 생성자를 추가해 보자.
+class FourCal:
+    def __init__(self,first,second):
+        self.first = first
+        self.second = second
+    def setdata(self,first,second):
+        self.first = first
+        self.second = second
+    def add(self):
+        result = self.first + self.second
+        return result
+    def mul(self):
+        result = self.first * self.second
+        return result
+    def sub(self):
+        result = self.first - self.second
+        return result
+    def div(self):
+        result = self.first / self.second
+        return result
+
+#새롭게 추가된 생성자 __init__ 메소드만 따로 떼어 내서 살펴보자.
+def __init__(self,first,second):
+    self.first = first
+    self.second = second
+
+#__init__ 메소드는 setdata 메소드와 이름만 다르고 모든 게 동일하다. 단 메소드 이름을 __init__으로 했기 때문에 생성자로 인식되어 객체가 생성되는 시점에 자동으로 호출되는 차이가 있다.
+#이제 다음처럼 예를 수행해 보자.
+# a = FourCal() #타입 에러 발생
+# TypeError: __init__() missing 2 required positional arguments: 'first' and 'second'
+
+#a = FourCal()을 수행할 때 생성자 __init__이 호출되어 위와 같은 오류가 발생했다. 오류가 발생한 이유는 생성자의 매개변수 first와 second에 해당하는 값이 전달되지 않았기 때문이다.
+#위 오류를 해결하려면 다음처럼 first와 second에 해당되는 값을 전달하여 객체를 생성해야 한다.
+a = FourCal(4,2)
+
+#위와 같이 수행하면 __init__ 메소드의 매개변수에는 각각 아래와 같은 값이 대입된다.
+#   매개변수        값
+#   self        생성되는 객체
+#   first           4
+#   second          2
+
+#따라서 __init__ 메소드가 호출되면 setdata 메소드를 호출했을 때와 마찬가지로 first와 second라는 객체변수가 생성될 것이다.
+#다음과 같이 객체변수의 값을 확인해 보자.
+a = FourCal(4,2)
+print(a.first)
+print(a.second)
+
+#add나 div등의 메소드도 잘 동작하는지 확인해 보자.
+a = FourCal(4,2)
+print(a.add())
+print(a.div())
+#이상 없이 잘 동작하는 것을 확인할 수 있다.
+print()
+
+#클래스의 상속
+#상속(Inheritance)이란 '물려받다'라는 뜻으로, '재산을 상속받다'라고 할 때의 상속과 같은 의미이다. 클래스에도 이 개념을 적용할 수 있다.
+#어떤 클래스를 만들 때 다른 클래스의 기능을 물려받을 수 있게 만드는 것이다. 이번에는 상속 개념을 사용하여 우리가 만든 FourCal 클래스에 a^b(a의 b제곱)을 구할 수 있는 기능을 추가해 보자.
+#앞에서 FourCal 클래스는 이미 만들어 놓았으므로 FourCal클래스를 상속하는 MoreFourCal 클래스는 다음과 같이 간단하게 만들 수 있다.
+class MoreFourCal(FourCal):
+    pass
+
+#클래스를 상속하기 위해서는 다음처럼 클래스 이름 뒤 괄호 안에 상속할 이름을 넣어주면 된다.
+#class 클래스 이름(상속할 클래스 이름)
+
+#MourFourCal 클래스는 FourCal 클래스를 상속했으므로 FourCal 클래스의 모든 기능을 사용할 수 있어야 한다.
+#다음과 같이 확인해 보자.
+a = MoreFourCal(4,2)
+print(a.add())
+print(a.mul())
+print(a.sub())
+print(a.div())
+#상속받은 FourCal 클래스의 기능을 모두 사용할 수 있음을 확인할 수 있다.
+print()
+
+#점프 투 파이썬     왜 상속을 해야 할까?
+#보통 상속은 기존 클래스를 변경하지 않고 기능을 추가하거나 기존 기능을 변경하려고 할 때 사용한다.
+#'클래스에 기능을 추가하고 싶으면 기존 클래스를 수정하면 되는데 왜 굳이 상속을 받아서 처리해야 하지?' 라는 의문이 들 수 있다.
+#하지만 기존 클래스가 라이브러리 형태로 제공되거나 수정이 허용되지 않는 상황이라면 상속을 사용해야 한다.
+
+#이제 원래 목적인 a의 b제곱(a^b)를 계산하는 MoreFourCal 클래스를 만들어 보자.
+class MoreFourCal(FourCal):
+    def pow(self):
+        result = self.first ** self.second
+        return result
+    
+#pass 문장은 삭제하고 위와 같이 두 수의 거듭제곱을 구할 수 있는 pow 메소드를 추가해 주었다.
+#그리고 다음과 같이 pow 메소드를 수행해 보자.
+a = MoreFourCal(4,2)
+print(a.pow())
+
+#MoreFourCal 클래스로 만든 a 객체에 값 4와 2를 설정한 후 pow 메소드를 호출하면 4의 2제곱인 (4^2) 16을 돌려주는 것을 확인할 수 있다.
+#상속은 MoreFourCal 클래스처럼 기존 클래스(FourCal)는 그대로 놔둔 채 클래스의 기능을 확장시킬 때 주로 사용한다.
+print()
+
+#메소드 오버라이딩
+#이번에는 FourCal 클래스를 다음과 같이 실행해 보자.
+# a = FourCal(4,0)
+# a.div()
+#Traceback (most recent call last):
+#   File "c:\Users\Yoon\Desktop\Github Desktop\Jump_Up_To_Python\Ch01\Part 04\Class.py", line 433, in <module>
+#     a.div()
+#   File "c:\Users\Yoon\Desktop\Github Desktop\Jump_Up_To_Python\Ch01\Part 04\Class.py", line 355, in div
+#     result = self.first / self.second
+# ZeroDivisionError: division by zero
+#FourCal 클래스의 객체 a와 4와 0 값을 설정하고 div 메소드를 호출하면 4를 0으로 나누려고 하기 때문에 위와 같은 ZeroDivisionError 오류가 발생한다. 
+# 하지만 0으로 나눌 때 오류가 아닌 0을 돌려주도록 만들고 싶다면 어떻게 해야 할까?
+
+#다음과 같이 FourCal 클래스를 상속하는 SafeFourCal 클래스를 만들어 보자
+class SafeFourCal(FourCal):
+    def div(self):
+        if self.second == 0:    #나누는 값이 0인 경우 숫자 0을 돌려주도록 수정
+            return 0
+        else:
+            return self.first / self.second
+
+#selfFourCal 클래스는 FourCal 클래스에 있는 div 메소드를 동일한 이름으로 다시 작성하였다.
+#이렇게 부모 클래스(상속한 클래스)에 있는 메소드를 동일한 이름으로 다시 만드는 것을 메소드 오버라이딩(Method Overriding) 이라고 한다.
+#이렇게 메소드를 오버라이딩 하면 부모 클래스의 메소드 대신 오버라이딩한 메소드가 호출된다.
+
+#SafeFourCal 클래스에 오버라이딩한 div 메소드는 나누는 값이 0인 경우에는 0을 돌려주도록 수정했다. 이제 다시 위에서 수행한 예제를 FourCal 클래스 대신 SafeFourCal 클래스를 사용해서 수정해보자.
+a = SafeFourCal(4,0)
+print(a.div())
+#FourCal 클래스와는 달리 ZeroDivisionError가 발생하지 않고 의도한 대로 0을 돌려주는 것을 확인할 수 있을 것이다.
+print()
+
+#클래스 변수
+#객체변수는 다른 개체들에 영향받지 않고 독립적으로 그 값을 유지한다는 점을 이미 알아보았다.
+#이번에는 객체변수와는 성격이 다른 클래스 변수에 대해 알아보자.
+#다음 클래스를 작성해 보자.
+class Family:
+    lastname = "김"
+    
+#Family 클래스에 선언한 lastname이 바로 클래스 변수이다. 클래스 변수는 클래스 안에 함수를 선언하는 것과 마찬가지로 클래스 안에 변수를 선언하여 생성한다.
+#이제 Family 클래스를 다음과 같이 사용해 보자.
+print(Family.lastname)
+#클래스 변수는 위 예와 같이 클래스 이름.클래스 변수로 사용할 수 있다.
+#또는 다음과 같이 Family 클래스로 만든 객체를 통해서도 클래스 변수를 사용할 수 있다.
+a = Family()
+b = Family()
+print(a.lastname)
+print(b.lastname)
+print()
+#만약 Family 클래스의 lastname을 다음과 같이 "박"이라는 문자열로 바꾸면 어떻게 될까?
+Family.lastname = "박"
+
+#다음과 같이 확인해 보자.
+print(a.lastname)
+print(b.lastname)
+#클래스 변수 값을 변경했더니 클래스로 만든 객체의 lastname 값도 모두 변경된다는 것을 확인할 수 있다.
+#즉 클래스 변수는 클래스로 만든 모든 객체가 공유된다는 특징이 있다.
+
+#id 함수를 사용하면 클래스 변수가 공유된다는 사실을 증명할 수 있다.
+print(id(Family.lastname))
+print(id(a.lastname))
+print(id(b.lastname))
+#id값이 모두 같으므로 Family.lastname, a.lastname, b.lastname은 모두 같은 메모리를 가리키고 있다.
+
+#클래스 변수를 가장 늦게 설명하는 이유는 클래스에서 클래스 변수보다는 객체변수가 훨씬 중요하기 때문이다.
+#실무 프로그래밍을 할 때도 클래스 변수보다는 객체변수를 사용하는 비율이 훨씬 높다.
