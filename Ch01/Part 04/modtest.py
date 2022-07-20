@@ -1,4 +1,4 @@
-import mod2
+import mymod.mod2 as mod2
 result = mod2.add(3,4)
 print(result)
 
