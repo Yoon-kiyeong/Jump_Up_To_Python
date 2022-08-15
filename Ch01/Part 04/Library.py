@@ -230,3 +230,74 @@ print(webbrowser.open("http://google.com"))
 
 #open_new 함수는 이미 웹 브라우저가 실행된 상태이더라도 새로운 창으로 핻당 주소가 열리게 한다.
 print(webbrowser.open_new("http://google.com"))
+
+#점프 투 파이썬 스레드를 다루는 threading 모듈
+#스레드 프로그래밍은 초보 프로그래머가 구현하기에는 매우 어려운 기술이다. 눈으로만 살펴보고 넘어가자
+#컴퓨터에서 동작하고 있는 프로그램을 프로세스(Process)라고 한다. 보통 1개의 프로세스는 한 가지 일만 하지만 스레드(Thread)를 사룔하면 한 프로세스 안에서 2가지 또는 그 이상의 일을 동시에 수행할 수 있다.
+
+#간단한 예제로 설명을 대신하겠다.
+import time
+
+def long_task():    #5초의 시간이 걸리는 함수
+    for i in range(5):
+        time.sleep(1)   #1초간 대기한다.
+        print("working:%s'\n" % i)
+
+print("Start")
+
+for i in range(5):  #long_task를 5회 수행한다.
+    long_task()
+
+print("end")
+
+#long_task 함수는 수행하는 데 5초의 시간이 걸리는 함수이다. 위 프로그램은 이 함수를 총 5번 반복해서 수행하는 프로그램이다. 이 프로그램은 5초가 5번 반복되니 총 25초의 시간이 걸린다.
+#하지만 앞에서 설명했듯이 스레드를 사용하면 5초의 시간이 걸리는 long_task 함수를 동시에 실행할 수 있으니 시간을 줄일 수 있다.
+
+#다음과 같이 프로그램을 수정해 보자.
+import time
+import threading     #스레드를 생성하기 위해서는 threading 모듈이 필요하다.
+
+def long_task():
+    for i in range(5):
+        time.sleep(1)
+        print("working:%s\n" % i)
+print("Start") 
+
+threads = []
+for i in range(5):
+    t = threading.Thread(target=long_task)  #스레드를 생성한다.
+    threads.append(t)
+
+for t in threads:
+    t.start()   #스레드를 실행한다.
+    
+print("End")
+
+#이와 같이 프로그램을 수정하고 실행해 보면 25초 걸리던 작업이 5초 정도에 수행되는 것을 확인할 수 있다.
+#threading.Thread를 사용하여 만든 스레드 객체가 동시 작업을 가능하게 해 주기 때문이다.
+#하지만 위 프로그램을 실행해 보면 "Start"와 "End"가 먼저 출력되고 그 이후에 스레드의 결과가 출력되는 것을 확인할 수 있다.
+#그리고 프로그램이 정상 종료되지 않는다. 우리가 기대하는 것은 "Start"가 출력되고 그 다음에 스레드의 결과가 출력된 후 마지막으로 "End"가 추력되는 것이다.
+#이 문제를 해결하기 위해서는 다음과 같이 프로그램을 수정해야 한다.
+
+import time
+import threading
+
+def long_task():
+    for i in range(5):
+        time.sleep(1)
+        print("working:%s\n" % i)
+
+print("Start")
+
+threads = []
+for i in range(5):
+    t = threading.Thread(target = long_task)
+    threads.append(t)
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()    #join으로 스레드가 종료될 때까지 기다린다.
+    
+print("End")
+
+#스레드의 join 함수는 해당 스레드가 종료될 때까지 기다리게 한다. 따라서 위와 같이 수정하면 우리가 우너하던 출력을 보게 된다.
